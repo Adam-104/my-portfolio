@@ -7,7 +7,7 @@
   border-bottom: 1px solid var(--line);
 }
 .page__back { font-weight: 600; color: var(--muted); }
-.page__back:hover { color: #fff; }
+.page__back:hover { color: var(--fg); }
 .page__pdf { flex: 1; width: 100%; min-height: calc(100vh - 70px); border: 0; background: #1a1a1d; }
 .page__fallback { padding: 40px var(--gutter); }
 .page__fallback a { text-decoration: underline; }

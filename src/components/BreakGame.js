@@ -1,3 +1,4 @@
+import { canvasColors } from "../lib/theme";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { layoutLine, GLYPH_H } from "../lib/bitmapFont";
 import { play } from "../portfolio";
@@ -202,27 +203,28 @@ export default function BreakGame() {
 
       // draw
       ctx.clearRect(0, 0, W, H);
+      const { fg, red } = canvasColors();
       const gap = Math.max(1, cell * 0.12);
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = `rgb(${fg})`;
       for (let i = 0; i < bricks.length; i++) {
         const b = bricks[i];
         if (b.alive) ctx.fillRect(b.x + gap / 2, b.y + gap / 2, cell - gap, cell - gap);
       }
-      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.fillStyle = `rgba(${fg},0.85)`;
       bits.forEach((p) => {
         ctx.globalAlpha = Math.max(0, p.life);
         ctx.fillRect(p.x, p.y, p.s, p.s);
       });
       ctx.globalAlpha = 1;
       // paddle
-      ctx.fillStyle = "#ff3d1f";
+      ctx.fillStyle = red;
       const pr = paddle.h / 2;
       ctx.beginPath();
       if (ctx.roundRect) ctx.roundRect(paddle.x, paddle.y, paddle.w, paddle.h, pr);
       else ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
       ctx.fill();
       // ball
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = `rgb(${fg})`;
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
       ctx.fill();

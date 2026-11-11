@@ -49,7 +49,7 @@
   border-radius: 50%;
   border: 1px solid var(--faint);
 }
-.play__lives i.on { background: #fff; border-color: #fff; }
+.play__lives i.on { background: var(--fg); border-color: var(--fg); }
 
 .play__overlay {
   position: absolute;
@@ -59,7 +59,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: rgba(5, 5, 7, 0.9);
+  background: rgb(var(--bg-rgb) / 0.9);
   text-align: center;
   padding: 24px;
 }

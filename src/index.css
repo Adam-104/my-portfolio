@@ -1,10 +1,4 @@
 :root {
-  --bg: #050507;
-  --fg: #ffffff;
-  --muted: rgba(255, 255, 255, 0.62);
-  --faint: rgba(255, 255, 255, 0.38);
-  --line: rgba(255, 255, 255, 0.12);
-  --panel: #0b0b0e;
   --red: #ff3d1f;
   --radius: 6px;
   --sans: "Outfit Variable", "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -12,6 +6,36 @@
   --gutter: clamp(20px, 4.5vw, 72px);
   --nav-h: 64px;
 }
+
+/* dark is the default; the laptop mockups always keep the dark palette */
+:root,
+.laptop {
+  --bg: #050507;
+  --bg-rgb: 5 5 7;
+  --fg: #ffffff;
+  --fg-rgb: 255 255 255;
+  --muted: rgb(var(--fg-rgb) / 0.62);
+  --faint: rgb(var(--fg-rgb) / 0.38);
+  --line: rgb(var(--fg-rgb) / 0.12);
+  --panel: #0b0b0e;
+  color-scheme: dark;
+}
+
+.laptop { color: var(--fg); }
+
+:root[data-theme="light"] {
+  --bg: #f3f0e8;
+  --bg-rgb: 243 240 232;
+  --fg: #0b0b0e;
+  --fg-rgb: 11 11 14;
+  --muted: rgb(var(--fg-rgb) / 0.68);
+  --faint: rgb(var(--fg-rgb) / 0.5);
+  --line: rgb(var(--fg-rgb) / 0.16);
+  --panel: #faf8f2;
+  --red: #e5301a;
+  color-scheme: light;
+}
+
 
 *,
 *::before,
@@ -80,17 +104,17 @@ img, svg, canvas { display: block; max-width: 100%; }
   gap: 10px;
   padding: 13px 22px;
   border-radius: var(--radius);
-  border: 1.5px solid #fff;
+  border: 1.5px solid var(--fg);
   background: transparent;
-  color: #fff;
+  color: var(--fg);
   font-weight: 700;
   font-size: 15px;
   line-height: 1.2;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
-.btn:hover { background: #fff; color: var(--bg); }
+.btn:hover { background: var(--fg); color: var(--bg); }
 .btn--primary { background: var(--red); border-color: var(--red); color: #fff; }
-.btn--primary:hover { background: #fff; border-color: #fff; color: var(--bg); }
+.btn--primary:hover { background: var(--fg); border-color: var(--fg); color: var(--bg); }
 .btn--small { padding: 9px 15px; font-size: 14px; }
 .btn svg { width: 16px; height: 16px; fill: currentColor; }
 

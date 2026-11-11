@@ -36,7 +36,7 @@
   line-height: 1.2;
 }
 .hero__role strong { font-weight: 800; }
-.hero__role em { font-size: 1.15em; color: rgba(255, 255, 255, 0.9); }
+.hero__role em { font-size: 1.15em; color: rgb(var(--fg-rgb) / 0.9); }
 
 @media (max-width: 760px) {
   .hero__text { bottom: clamp(28px, 6vh, 56px); }

@@ -13,6 +13,7 @@ export default function Hero({ awake }) {
         reduced={reduced}
         portrait={settings.portrait}
         densitySrc={`${process.env.PUBLIC_URL}/portrait-density.png`}
+        densitySrcLight={`${process.env.PUBLIC_URL}/portrait-density-light.png`}
       />
       <div className="hero__text">
         <h1 className="hero__word chrome">

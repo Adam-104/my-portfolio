@@ -1,3 +1,4 @@
+import ThemeToggle from "./ThemeToggle";
 import React, { useEffect, useState } from "react";
 import { greeting, nav } from "../portfolio";
 import "./Nav.css";
@@ -36,6 +37,7 @@ export default function Nav({ ready }) {
       <a className="nav__name" href="#home" onClick={() => setOpen(false)}>
         {greeting.displayName.toUpperCase()}
       </a>
+      <ThemeToggle />
       <button
         className="nav__toggle"
         aria-expanded={open}

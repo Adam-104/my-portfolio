@@ -17,7 +17,7 @@
   font-size: 1.1em;
   letter-spacing: 0;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgb(var(--fg-rgb) / 0.92);
 }
 .contact__intro { max-width: 40ch; margin-top: 26px; color: var(--muted); font-size: 1.1rem; }
 .contact__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }

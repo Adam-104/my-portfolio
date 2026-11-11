@@ -8,4 +8,4 @@
   font-size: 13px;
   color: var(--faint);
 }
-.footer a:hover { color: #fff; }
+.footer a:hover { color: var(--fg); }

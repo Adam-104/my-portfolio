@@ -8,7 +8,6 @@
   padding: 0 var(--gutter);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
   opacity: 0;
@@ -18,12 +17,16 @@
 .nav--ready { opacity: 1; transform: none; }
 
 .nav__name {
+  margin-right: auto;
   font-weight: 800;
   font-size: 14px;
   letter-spacing: 0.04em;
 }
 
+.theme-toggle { order: 2; margin-left: clamp(16px, 2.4vw, 34px); }
+
 .nav__links {
+  order: 1;
   display: flex;
   gap: clamp(16px, 2.4vw, 34px);
 }
@@ -38,7 +41,7 @@
   transition: color 0.2s;
 }
 .nav__links a:hover,
-.nav__links a.is-active { color: #fff; }
+.nav__links a.is-active { color: var(--fg); }
 .nav__links a::after {
   content: "";
   position: absolute;
@@ -74,13 +77,15 @@
     height: 44px;
     margin-right: -10px;
     z-index: 2;
+    order: 3;
   }
+  .theme-toggle { margin-left: 0; margin-right: 6px; }
   .nav__bars,
   .nav__bars::before {
     display: block;
     width: 22px;
     height: 2px;
-    background: #fff;
+    background: var(--fg);
     transition: transform 0.3s;
   }
   .nav__bars { position: relative; top: -3px; }
@@ -95,7 +100,7 @@
     justify-content: center;
     gap: 6px;
     padding: 0 var(--gutter);
-    background: rgba(5, 5, 7, 0.97);
+    background: rgb(var(--bg-rgb) / 0.97);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;

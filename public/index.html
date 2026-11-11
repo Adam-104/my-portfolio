@@ -11,6 +11,14 @@
     <meta name="author" content="Alamuri Adamu" />
     <meta name="keywords" content="Alamuri Adamu, Java Developer, Spring Boot, Spring Security, MySQL, Portfolio" />
     <meta name="theme-color" content="#050507" />
+    <script>
+      try {
+        if (localStorage.getItem("theme") === "light") {
+          document.documentElement.dataset.theme = "light";
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f3f0e8");
+        }
+      } catch (e) {}
+    </script>
     <meta property="og:title" content="Alamuri Adamu | Java Developer" />
     <meta property="og:description" content="Java developer from Ongole, Andhra Pradesh. Spring Boot, Spring Security, MySQL and REST APIs, with tests and CI." />
     <meta property="og:type" content="website" />

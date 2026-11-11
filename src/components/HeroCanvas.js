@@ -1,3 +1,4 @@
+import { canvasColors, getTheme } from "../lib/theme";
 import React, { useEffect, useRef } from "react";
 
 const BUCKETS = 4;
@@ -8,7 +9,7 @@ const BUCKETS = 4;
   Particles shy away from the pointer and scatter a little as you scroll.
   With no density map (or portrait={false}) it stays as drifting dust.
 */
-export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
+export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLight, reduced }) {
   const canvasRef = useRef(null);
   const activeRef = useRef(active);
   const startRef = useRef(null);
@@ -50,14 +51,14 @@ export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
           const px = Math.min(density.size - 1, (u * density.size) | 0);
           const py = Math.min(density.size - 1, (v * density.size) | 0);
           d = density.data[py * density.size + px] / 255;
-          if (Math.random() < d * d + 0.02 && d > 0.05) break;
+          if (Math.random() < (getTheme() === "light" ? Math.pow(d, 1.3) : d * d) + 0.02 && d > 0.05) break;
           d = 0;
         }
         if (d === 0) { HAS[i] = 0; continue; }
         HAS[i] = 1;
         TX[i] = ox + u * size;
         TY[i] = oy + v * size;
-        ALPHA[i] = Math.min(1, 0.25 + d * 0.9);
+        ALPHA[i] = getTheme() === "light" ? Math.min(1, 0.6 + d * 0.6) : Math.min(1, 0.25 + d * 0.9);
       }
     };
 
@@ -70,8 +71,10 @@ export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
       canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const narrow = W < 760;
-      const portraitCount = portrait && density ? (narrow ? 5200 : 10500) : 0;
-      const dustCount = narrow ? 700 : 1600;
+      const light = getTheme() === "light";
+      // dark ink on a light page needs more, crisper dots to hold the likeness
+      const portraitCount = portrait && density ? (light ? (narrow ? 9000 : 20000) : (narrow ? 5200 : 10500)) : 0;
+      const dustCount = light ? (narrow ? 350 : 800) : (narrow ? 700 : 1600);
       const next = portraitCount + dustCount;
       const grow = (old) => { const a = new Float32Array(next); if (old) a.set(old.subarray(0, Math.min(old.length, next))); return a; };
       const had = N;
@@ -88,7 +91,7 @@ export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
         }
         DELAY[i] = Math.random() * 1.3;
         ALPHA[i] = 0.25 + Math.random() * 0.6;
-        SIZE[i] = Math.random() < 0.12 ? 1.9 : 1.15;
+        SIZE[i] = light ? (Math.random() < 0.12 ? 1.9 : 1.25) : (Math.random() < 0.12 ? 1.9 : 1.15);
       }
       // dust particles come last and never get targets
       const targetsFor = portraitCount;
@@ -105,10 +108,12 @@ export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
 
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
+      const { fg } = canvasColors();
+      const isLight = getTheme() === "light";
       for (let b = 0; b < BUCKETS; b++) {
         const lo = b / BUCKETS;
         const hi = (b + 1) / BUCKETS;
-        ctx.fillStyle = `rgba(255,255,255,${(0.28 + (b / (BUCKETS - 1)) * 0.72).toFixed(2)})`;
+        ctx.fillStyle = `rgba(${fg},${(isLight ? 0.55 + (b / (BUCKETS - 1)) * 0.45 : 0.28 + (b / (BUCKETS - 1)) * 0.72).toFixed(2)})`;
         for (let i = 0; i < N; i++) {
           const a = ALPHA[i];
           if (a < lo || a >= hi + (b === BUCKETS - 1 ? 1 : 0)) continue;
@@ -202,10 +207,12 @@ export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
       window.addEventListener("pointerleave", onLeave);
     };
 
-    if (portrait && densitySrc) {
+    const densities = {};
+    const srcFor = (theme) => (theme === "light" && densitySrcLight ? densitySrcLight : densitySrc);
+    const loadDensity = (src, cb) => {
+      if (densities[src]) { cb(densities[src]); return; }
       const img = new Image();
       img.onload = () => {
-        if (cancelled) return;
         const c = document.createElement("canvas");
         c.width = c.height = img.width;
         const cx = c.getContext("2d");
@@ -213,17 +220,36 @@ export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
         const px = cx.getImageData(0, 0, c.width, c.height).data;
         const data = new Uint8Array(c.width * c.height);
         for (let i = 0; i < data.length; i++) data[i] = px[i * 4];
-        density = { data, size: c.width };
-        start();
+        densities[src] = { data, size: c.width };
+        cb(densities[src]);
       };
-      img.onerror = () => { if (!cancelled) start(); };
-      img.src = densitySrc;
+      img.onerror = () => cb(null);
+      img.src = src;
+    };
+
+    let started = false;
+    const startOnce = () => { if (!started) { started = true; start(); } };
+    const usePortrait = portrait && densitySrc;
+    if (usePortrait) {
+      loadDensity(srcFor(getTheme()), (dd) => { if (cancelled) return; density = dd; startOnce(); });
     } else {
-      start();
+      startOnce();
     }
+
+    // switching theme swaps the density map; the particles flow into the new portrait
+    const onTheme = () => {
+      if (!usePortrait) { if (reduced) draw(); return; }
+      loadDensity(srcFor(getTheme()), (dd) => {
+        if (cancelled) return;
+        density = dd;
+        if (started) build();
+      });
+    };
+    window.addEventListener("themechange", onTheme);
 
     return () => {
       cancelled = true;
+      window.removeEventListener("themechange", onTheme);
       cancelAnimationFrame(raf);
       io.disconnect();
       window.removeEventListener("resize", onResize);
@@ -232,7 +258,7 @@ export default function HeroCanvas({ active, portrait, densitySrc, reduced }) {
       window.removeEventListener("touchmove", onMove);
       window.removeEventListener("pointerleave", onLeave);
     };
-  }, [portrait, densitySrc, reduced]);
+  }, [portrait, densitySrc, densitySrcLight, reduced]);
 
   useEffect(() => {
     if (reduced) startRef.current = performance.now() - 5000;

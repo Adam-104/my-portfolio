@@ -28,6 +28,11 @@ new. React 18, React Router 6 and GSAP.
   (`terminal` and each project's `preview` in `src/portfolio.js`). Laptops type on hover, and once on touch screens.
 - **Counters:** project numbers count up when they scroll into view.
 - **Page transition:** a red panel wipes over the page when you open or leave `/resume`.
+- **Light / dark toggle:** the square button at the right of the top bar. Dark is the default, the choice is
+  remembered in the browser. Colours live in `src/index.css` (`:root` and `:root[data-theme="light"]`);
+  the canvases read them through `src/lib/theme.js`.
+- **Portrait in light mode:** light mode uses its own density map (`public/portrait-density-light.png`) with more,
+  crisper dots. Rebuild it from the dark map with `python3 tools/make_portrait_light.py public/portrait-density.png public/portrait-density-light.png`.
 - All motion is switched off for visitors who prefer reduced motion.
 
 ## Change the content
