@@ -1,10 +1,17 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import Terminal from "./Terminal";
+import CountUp from "./CountUp";
+import useInView from "../lib/useInView";
 import Icon from "./Icon";
 import { projects, projectsSection } from "../portfolio";
 import "./Projects.css";
 
 function Laptop({ project }) {
   const ref = useRef(null);
+  const [hover, setHover] = useState(false);
+  const inView = useInView(ref, { threshold: 0.5 });
+  const touch = typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
+  const termOn = hover || (touch && inView);
   const onMove = (e) => {
     const el = ref.current;
     if (!el || window.matchMedia("(hover: none)").matches) return;
@@ -19,9 +26,10 @@ function Laptop({ project }) {
     if (!el) return;
     el.style.setProperty("--ry", "0deg");
     el.style.setProperty("--rx", "0deg");
+    setHover(false);
   };
   return (
-    <div className="laptop" ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}>
+    <div className="laptop" ref={ref} onMouseMove={onMove} onMouseEnter={() => setHover(true)} onMouseLeave={onLeave}>
       <div className="laptop__lid">
         <div className="laptop__screen">
           {project.image ? (
@@ -30,10 +38,11 @@ function Laptop({ project }) {
             <div className="spec" aria-hidden="true">
               <span className="spec__name chrome">{project.title}</span>
               <span className="spec__sub serif-italic">{project.italic}</span>
+              {project.preview && <Terminal lines={project.preview} active={termOn} className="spec__term" />}
               <ul className="spec__metrics">
                 {project.metrics.map((m) => (
                   <li key={m.label}>
-                    <b>{m.value}</b>
+                    <b><CountUp value={m.value} active={inView} /></b>
                     <span>{m.label}</span>
                   </li>
                 ))}

@@ -45,6 +45,13 @@ export const about = {
   text: "I'm a Java developer from Ongole, Andhra Pradesh. I build REST APIs with Spring Boot and MySQL, secure them with Spring Security and JWT, and cover them with tests. I benchmarked TypeQuest's live API and cut one endpoint from about 2.2 s to 0.3 s. I finished a B.Tech in Computer Science with a CGPA of 8.03, and I'm looking for my first Java developer role.",
 };
 
+/* The typed terminal strip in the intro section. */
+export const terminal = [
+  { cmd: "whoami", out: "adamu · java developer · ongole, india" },
+  { cmd: "cat stack.txt", out: "spring boot · mysql · jwt · react" },
+  { cmd: "./status", out: "open to my first Java developer role" },
+];
+
 export const path = [
   {
     when: "2023 – 2026",
@@ -145,7 +152,8 @@ export const projectsSection = { title: "Selected work" };
 /*
   `image` is optional. Put a screenshot in public/projects/ and set
   image: "/projects/typequest.png" to show it on the laptop screen.
-  Without it the screen shows the project's numbers.
+  Without it the screen shows the project's numbers, and a small terminal
+  (`preview`) that types out when you hover the laptop.
 */
 export const projects = [
   {
@@ -158,6 +166,10 @@ export const projects = [
     metrics: [
       { value: "110", label: "automated tests" },
       { value: "2.2 → 0.3 s", label: "latency on /api/lessons" },
+    ],
+    preview: [
+      { cmd: "curl /api/lessons", out: "200 OK · 0.3 s" },
+      { cmd: "./mvnw test", out: "110 tests passed" },
     ],
     tools: [
       { name: "Java", icon: "openjdk" },
@@ -183,6 +195,10 @@ export const projects = [
       { value: "58", label: "JUnit tests" },
       { value: "55", label: "Vitest tests" },
     ],
+    preview: [
+      { cmd: "mvn test", out: "58 tests passed" },
+      { cmd: "npm test", out: "55 tests passed" },
+    ],
     tools: [
       { name: "Java", icon: "openjdk" },
       { name: "Spring Boot", icon: "springboot" },
@@ -206,6 +222,10 @@ export const projects = [
     metrics: [
       { value: "3", label: "failed PIN attempts lock the account" },
       { value: "2", label: "roles: customer and admin" },
+    ],
+    preview: [
+      { cmd: "login --wrong-pin x3", out: "account locked" },
+      { cmd: "roles", out: "customer · admin" },
     ],
     tools: [
       { name: "Core Java", icon: "openjdk" },

@@ -1,6 +1,7 @@
 import React from "react";
 import Icon from "./Icon";
-import { contact, greeting } from "../portfolio";
+import { TLink } from "./PageTransition";
+import { contact } from "../portfolio";
 import "./Contact.css";
 
 export default function Contact() {
@@ -16,10 +17,10 @@ export default function Contact() {
             <Icon name="mail" />
             Email me
           </a>
-          <a className="btn" href={greeting.resumeLink} target="_blank" rel="noopener noreferrer">
+          <TLink className="btn" to="/resume">
             <Icon name="file" />
             Resume
-          </a>
+          </TLink>
         </div>
       </div>
       <div className="panel contact__card">

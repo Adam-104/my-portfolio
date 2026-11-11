@@ -116,3 +116,18 @@
   .project, .project--flip { grid-template-columns: 1fr; }
   .project--flip .laptop { order: 0; }
 }
+
+/* typed terminal on the laptop screen */
+.spec__term {
+  position: absolute;
+  right: 7%;
+  top: 37%;
+  width: 44%;
+  font-size: clamp(9px, 1.3vw, 13px);
+  padding: 8px 12px 2px;
+  background: #050507;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+@media (max-width: 520px) { .spec__term { display: none; } }
+.spec__term:empty { display: none; }

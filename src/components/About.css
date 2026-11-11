@@ -66,3 +66,5 @@
 @media (max-width: 520px) {
   .about__step, .about__extras > div { grid-template-columns: 1fr; gap: 6px; }
 }
+
+.about__term { margin-top: 12px; padding: 20px clamp(20px, 2.6vw, 32px); border-top: 3px solid var(--red); }

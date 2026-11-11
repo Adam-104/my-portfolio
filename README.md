@@ -20,6 +20,16 @@ new. React 18, React Router 6 and GSAP.
   tech ticker, a numbered skills list, laptop project mockups, and a pixel
   text breakout game.
 
+## Interaction details
+
+- **Custom cursor:** a dot and a trailing ring that grows over links. Only on devices with a mouse.
+- **Scroll reveals:** section titles wipe in from the left, cards slide up.
+- **Terminal strips:** the intro section and each laptop screen type out short commands
+  (`terminal` and each project's `preview` in `src/portfolio.js`). Laptops type on hover, and once on touch screens.
+- **Counters:** project numbers count up when they scroll into view.
+- **Page transition:** a red panel wipes over the page when you open or leave `/resume`.
+- All motion is switched off for visitors who prefer reduced motion.
+
 ## Change the content
 
 Everything you read on the site is in `src/portfolio.js`: your name, intro
