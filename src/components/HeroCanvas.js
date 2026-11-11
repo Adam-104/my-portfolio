@@ -36,6 +36,7 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
     const sampleTargets = () => {
       // fill TX/TY from the density map; particles with no target stay dust
       const narrow = W < 760;
+      const light = getTheme() === "light";
       const size = narrow ? Math.min(W * 1.02, H * 0.64) : Math.min(H * 1.04, W * 0.66);
       const ox = (narrow ? W / 2 : W * 0.6) - size / 2;
       const oy = narrow ? H * 0.09 : H * 0.02;
@@ -51,14 +52,23 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
           const px = Math.min(density.size - 1, (u * density.size) | 0);
           const py = Math.min(density.size - 1, (v * density.size) | 0);
           d = density.data[py * density.size + px] / 255;
-          if (Math.random() < (getTheme() === "light" ? Math.pow(d, 1.3) : d * d) + 0.02 && d > 0.05) break;
+          // light mode: stretch the levels (lift the black point, expand the mid-tones)
+          // so eyes, brows, nose and mouth get clearly more dots than skin
+          const dl = light ? Math.min(1, Math.max(0, (d - 0.08) / 0.8)) : d;
+          if (Math.random() < (light ? Math.pow(dl, 1.1) + 0.01 : d * d) + 0.02 && d > 0.05) break;
           d = 0;
         }
         if (d === 0) { HAS[i] = 0; continue; }
         HAS[i] = 1;
         TX[i] = ox + u * size;
         TY[i] = oy + v * size;
-        ALPHA[i] = getTheme() === "light" ? Math.min(1, 0.6 + d * 0.6) : Math.min(1, 0.25 + d * 0.9);
+        if (light) {
+          const dl = Math.min(1, Math.max(0, (d - 0.08) / 0.8));
+          ALPHA[i] = Math.min(1, 0.5 + dl * 0.5); // lands in the two darkest buckets
+          SIZE[i] = 1.45 + dl * 1.0; // darker areas get bigger dots, so features read
+        } else {
+          ALPHA[i] = Math.min(1, 0.25 + d * 0.9);
+        }
       }
     };
 
@@ -73,8 +83,8 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
       const narrow = W < 760;
       const light = getTheme() === "light";
       // dark ink on a light page needs more, crisper dots to hold the likeness
-      const portraitCount = portrait && density ? (light ? (narrow ? 9000 : 20000) : (narrow ? 5200 : 10500)) : 0;
-      const dustCount = light ? (narrow ? 350 : 800) : (narrow ? 700 : 1600);
+      const portraitCount = portrait && density ? (light ? (narrow ? 13000 : 30000) : (narrow ? 5200 : 10500)) : 0;
+      const dustCount = light ? (narrow ? 150 : 350) : (narrow ? 700 : 1600);
       const next = portraitCount + dustCount;
       const grow = (old) => { const a = new Float32Array(next); if (old) a.set(old.subarray(0, Math.min(old.length, next))); return a; };
       const had = N;
@@ -90,8 +100,9 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
           VY[i] = (Math.random() - 0.5) * 0.4;
         }
         DELAY[i] = Math.random() * 1.3;
-        ALPHA[i] = 0.25 + Math.random() * 0.6;
-        SIZE[i] = light ? (Math.random() < 0.12 ? 1.9 : 1.25) : (Math.random() < 0.12 ? 1.9 : 1.15);
+        // light mode: stray dust stays faint (low buckets) so it doesn't compete with the face
+        ALPHA[i] = light ? Math.random() * 0.45 : 0.25 + Math.random() * 0.6;
+        SIZE[i] = light ? (Math.random() < 0.12 ? 2.2 : 1.5) : (Math.random() < 0.12 ? 1.9 : 1.15);
       }
       // dust particles come last and never get targets
       const targetsFor = portraitCount;
@@ -108,12 +119,15 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
 
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
-      const { fg } = canvasColors();
       const isLight = getTheme() === "light";
+      // light mode: near-black ink and a steeper alpha ramp; dust (low buckets) stays faint,
+      // portrait dots (top two buckets) are close to solid
+      const fg = isLight ? "12,12,14" : canvasColors().fg;
+      const LIGHT_ALPHA = [0.3, 0.6, 0.9, 1];
       for (let b = 0; b < BUCKETS; b++) {
         const lo = b / BUCKETS;
         const hi = (b + 1) / BUCKETS;
-        ctx.fillStyle = `rgba(${fg},${(isLight ? 0.55 + (b / (BUCKETS - 1)) * 0.45 : 0.28 + (b / (BUCKETS - 1)) * 0.72).toFixed(2)})`;
+        ctx.fillStyle = `rgba(${fg},${(isLight ? LIGHT_ALPHA[b] : 0.28 + (b / (BUCKETS - 1)) * 0.72).toFixed(2)})`;
         for (let i = 0; i < N; i++) {
           const a = ALPHA[i];
           if (a < lo || a >= hi + (b === BUCKETS - 1 ? 1 : 0)) continue;
