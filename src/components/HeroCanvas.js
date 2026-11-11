@@ -55,7 +55,7 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
           // light mode: stretch the levels (lift the black point, expand the mid-tones)
           // so eyes, brows, nose and mouth get clearly more dots than skin
           const dl = light ? Math.min(1, Math.max(0, (d - 0.08) / 0.8)) : d;
-          if (Math.random() < (light ? Math.pow(dl, 1.1) + 0.01 : d * d) + 0.02 && d > 0.05) break;
+          if (Math.random() < (light ? Math.pow(dl, 0.9) + 0.03 : d * d) + 0.02 && d > 0.05) break;
           d = 0;
         }
         if (d === 0) { HAS[i] = 0; continue; }
@@ -65,7 +65,7 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
         if (light) {
           const dl = Math.min(1, Math.max(0, (d - 0.08) / 0.8));
           ALPHA[i] = Math.min(1, 0.5 + dl * 0.5); // lands in the two darkest buckets
-          SIZE[i] = 1.45 + dl * 1.0; // darker areas get bigger dots, so features read
+          SIZE[i] = 1.4 + dl * 0.75; // darker areas get bigger dots, but capped so eyes stay crisp
         } else {
           ALPHA[i] = Math.min(1, 0.25 + d * 0.9);
         }
@@ -83,7 +83,7 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
       const narrow = W < 760;
       const light = getTheme() === "light";
       // dark ink on a light page needs more, crisper dots to hold the likeness
-      const portraitCount = portrait && density ? (light ? (narrow ? 13000 : 30000) : (narrow ? 5200 : 10500)) : 0;
+      const portraitCount = portrait && density ? (light ? (narrow ? 14500 : 34000) : (narrow ? 5200 : 10500)) : 0;
       const dustCount = light ? (narrow ? 150 : 350) : (narrow ? 700 : 1600);
       const next = portraitCount + dustCount;
       const grow = (old) => { const a = new Float32Array(next); if (old) a.set(old.subarray(0, Math.min(old.length, next))); return a; };
