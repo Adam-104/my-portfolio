@@ -84,7 +84,8 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
       const light = getTheme() === "light";
       // dark ink on a light page needs more, crisper dots to hold the likeness
       const portraitCount = portrait && density ? (light ? (narrow ? 14500 : 34000) : (narrow ? 5200 : 10500)) : 0;
-      const dustCount = light ? (narrow ? 150 : 350) : (narrow ? 700 : 1600);
+      // same drifting dust as dark mode, so the free-floating movement feels identical
+      const dustCount = narrow ? 700 : 1600;
       const next = portraitCount + dustCount;
       const grow = (old) => { const a = new Float32Array(next); if (old) a.set(old.subarray(0, Math.min(old.length, next))); return a; };
       const had = N;
@@ -100,9 +101,10 @@ export default function HeroCanvas({ active, portrait, densitySrc, densitySrcLig
           VY[i] = (Math.random() - 0.5) * 0.4;
         }
         DELAY[i] = Math.random() * 1.3;
-        // light mode: stray dust stays faint (low buckets) so it doesn't compete with the face
-        ALPHA[i] = light ? Math.random() * 0.45 : 0.25 + Math.random() * 0.6;
-        SIZE[i] = light ? (Math.random() < 0.12 ? 2.2 : 1.5) : (Math.random() < 0.12 ? 1.9 : 1.15);
+        // dust uses the same brightness spread and dot sizes as dark mode (portrait dots
+        // are overridden per-particle in sampleTargets)
+        ALPHA[i] = 0.25 + Math.random() * 0.6;
+        SIZE[i] = Math.random() < 0.12 ? 1.9 : 1.15;
       }
       // dust particles come last and never get targets
       const targetsFor = portraitCount;
