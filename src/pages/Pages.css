@@ -1,0 +1,15 @@
+.page { min-height: 100vh; display: flex; flex-direction: column; }
+.page__bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+.page__back { font-weight: 600; color: var(--muted); }
+.page__back:hover { color: #fff; }
+.page__pdf { flex: 1; width: 100%; min-height: calc(100vh - 70px); border: 0; background: #1a1a1d; }
+.page__fallback { padding: 40px var(--gutter); }
+.page__fallback a { text-decoration: underline; }
+.page--center { align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 24px; }
+.page__code { font-size: clamp(6rem, 22vw, 14rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.9; }

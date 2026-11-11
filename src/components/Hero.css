@@ -1,0 +1,44 @@
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+}
+
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.hero__text {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(36px, 8vh, 88px);
+  z-index: 1;
+}
+
+.hero__word {
+  font-weight: 800;
+  font-size: clamp(3rem, 6.8vw, 9rem);
+  letter-spacing: -0.045em;
+  line-height: 0.86;
+}
+
+.hero__role {
+  margin-top: clamp(10px, 2vh, 22px);
+  padding-left: 0.4em;
+  font-size: clamp(1.1rem, 2vw, 1.7rem);
+  line-height: 1.2;
+}
+.hero__role strong { font-weight: 800; }
+.hero__role em { font-size: 1.15em; color: rgba(255, 255, 255, 0.9); }
+
+@media (max-width: 760px) {
+  .hero__text { bottom: clamp(28px, 6vh, 56px); }
+  .hero__word { font-size: clamp(2.6rem, 15vw, 6rem); }
+}
